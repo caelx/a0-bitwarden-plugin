@@ -1,0 +1,10 @@
+name: bitwarden
+title: Bitwarden
+description: Installs Bitwarden CLI/MCP and configures credential-vault behavior for Agent Zero.
+version: 1.0.0
+settings_sections:
+  - mcp
+  - external
+per_project_config: false
+per_agent_config: false
+always_enabled: false
