@@ -10,10 +10,9 @@ from .config import PLUGIN_NAME, get_config, settings_path, skill_target_root
 from .dependency_install import dependency_status
 from .install_manifest import load_manifest
 from .mcp_settings import inspect_settings_file
-from .redaction import trim_output
 from .skills import inspect_skill
 
-AUTH_ENV_VARS = ["BW_CLIENT_ID", "BW_CLIENT_SECRET", "BW_PASSWORD", "BW_SESSION"]
+AUTH_ENV_VARS = ["BW_CLIENT_ID", "BW_CLIENT_SECRET", "BW_PASSWORD"]
 
 
 def collect_status(config: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -55,18 +54,16 @@ def bitwarden_auth_status() -> dict[str, Any]:
         )
     except Exception as exc:
         status["bw_status"] = "command_failed"
-        status["error"] = trim_output(str(exc), 500)
+        status["error_type"] = type(exc).__name__
         return status
     status["returncode"] = result.returncode
     if result.returncode != 0:
         status["bw_status"] = "command_failed"
-        status["stderr_tail"] = trim_output(result.stderr, 1000)
         return status
     try:
         parsed = json.loads(result.stdout or "{}")
     except json.JSONDecodeError:
         status["bw_status"] = "unknown"
-        status["stdout_tail"] = trim_output(result.stdout, 1000)
         return status
     raw_status = str(parsed.get("status") or "unknown").lower()
     if raw_status in {"unauthenticated", "locked", "unlocked"}:

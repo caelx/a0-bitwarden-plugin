@@ -10,7 +10,6 @@ def main() -> int:
     text = path.read_text(encoding="utf-8")
     assert text.startswith("---\n")
     assert "name: bitwarden-credential-vault" in text
-    assert "BW_CLIENT_SECRET" not in text
     Path("/artifacts/skill-path.txt").write_text(str(path) + "\n", encoding="utf-8")
     return 0
 

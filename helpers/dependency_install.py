@@ -5,8 +5,6 @@ import subprocess
 from collections.abc import Callable
 from typing import Any
 
-from .redaction import trim_output
-
 BITWARDEN_PACKAGES = ["@bitwarden/cli", "@bitwarden/mcp-server"]
 EXECUTABLES = ["bw", "mcp-server-bitwarden"]
 RunCommand = Callable[[list[str]], subprocess.CompletedProcess[str]]
@@ -101,8 +99,6 @@ def install_system_dependencies(*, runner: RunCommand | None = None) -> dict[str
         "commands": commands,
         "apt_update_returncode": update.returncode,
         "apt_install_returncode": install.returncode,
-        "stdout_tail": trim_output((update.stdout or "") + (install.stdout or "")),
-        "stderr_tail": trim_output((update.stderr or "") + (install.stderr or "")),
     }
 
 
@@ -114,8 +110,6 @@ def install_npm_packages(*, npm: str = "npm", runner: RunCommand | None = None) 
         "ok": result.returncode == 0,
         "commands": [cmd],
         "returncode": result.returncode,
-        "stdout_tail": trim_output(result.stdout),
-        "stderr_tail": trim_output(result.stderr),
         "packages": list(BITWARDEN_PACKAGES),
     }
 
@@ -128,7 +122,7 @@ def executable_version(name: str) -> str:
             continue
         output = (result.stdout or result.stderr or "").strip().splitlines()
         if result.returncode == 0 and output:
-            return trim_output(output[0], 300)
+            return output[0][:300]
     return ""
 
 

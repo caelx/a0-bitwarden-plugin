@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 from .config import PLUGIN_VERSION, manifest_path
-from .redaction import redact_data
 
 
 def empty_manifest() -> dict[str, Any]:
@@ -32,15 +31,14 @@ def load_manifest(path: Path | None = None) -> dict[str, Any]:
         return empty_manifest()
     manifest = empty_manifest()
     manifest.update(data if isinstance(data, dict) else {})
-    return redact_data(manifest)
+    return manifest
 
 
 def save_manifest(manifest: dict[str, Any], path: Path | None = None) -> dict[str, Any]:
     target = path or manifest_path()
     target.parent.mkdir(parents=True, exist_ok=True)
-    clean = redact_data(manifest)
-    target.write_text(json.dumps(clean, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return clean
+    target.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return manifest
 
 
 def mark_setup(manifest: dict[str, Any], status: str = "setup") -> dict[str, Any]:

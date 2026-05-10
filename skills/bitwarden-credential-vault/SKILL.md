@@ -15,7 +15,7 @@ Search Bitwarden before asking the user for credentials. Use the available Bitwa
 
 Identify the service, account, project, client, username, URL, or folder that should contain the credential. If the identity is ambiguous, ask one short targeted question before retrieving or using anything.
 
-Retrieve only the fields needed for the current task. Redact secret values in responses, logs, command output, summaries, and notes. Do not paste raw credentials into chat unless the user explicitly requires it and there is no safer path.
+Retrieve only the fields needed for the current task. Do not paste raw credentials into chat unless the user explicitly requires it and there is no safer path.
 
 Use Agent Zero project secrets or environment variables only for temporary runtime injection when a tool needs a value. Do not treat project secrets, shell profiles, repository files, or Agent Zero memory as durable secret storage.
 
@@ -24,12 +24,6 @@ Use Agent Zero project secrets or environment variables only for temporary runti
 Store newly provided or newly generated credentials in Bitwarden unless the user explicitly says not to. Prefer updating an existing matching vault item when there is a clear match instead of creating duplicates.
 
 Preserve useful metadata such as service name, username, login URL, project or client name, folder, and concise operational notes. Do not place secret values in notes unless Bitwarden has no better field for that secret.
-
-## Redaction And Logging
-
-Never store or expose secrets in repository files, chat summaries, logs, shell history, project files, scratch files, or Agent Zero memory. Avoid commands that put secret values directly in shell history or process lists. Prefer stdin, environment injection, or the MCP tool's structured secret field when available.
-
-When showing status, say whether a secret was found, stored, updated, missing, locked, or unavailable. Do not show the secret itself.
 
 ## Updating Existing Credentials
 

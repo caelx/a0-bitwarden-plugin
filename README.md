@@ -25,7 +25,7 @@ python execute.py uninstall --noninteractive
 
 Use `--skip-system-deps` when the environment cannot run `apt-get`. In that mode, setup requires `npm` to already be available if `bw` or `mcp-server-bitwarden` is missing.
 
-Every command prints redacted JSON. Secret values are not printed or written to the install manifest.
+Every command prints machine-readable JSON. Status reports whether supported environment variables are present, not their values.
 
 ## What Setup Does
 
@@ -60,13 +60,16 @@ Supported environment variables:
 - `BW_CLIENT_ID`
 - `BW_CLIENT_SECRET`
 - `BW_PASSWORD`
-- `BW_SESSION`
 
-`BW_SESSION` is ephemeral. Do not treat it as durable configuration.
+## Session
+
+Do not set `BW_SESSION` as plugin configuration or as a normal user-provided environment variable. It is an ephemeral internal value produced by Bitwarden CLI login/unlock flows and may be consumed by `bw` or the MCP server inside a running process.
+
+Treat `BW_SESSION` as internal runtime state only. Do not put it in `.env`, Compose files, Agent Zero settings, plugin config, manifests, README examples, CI secrets, or durable shell profiles.
 
 ## Skill Behavior
 
-The plugin installs `bitwarden-credential-vault`, which tells agents to search Bitwarden before asking for credentials, store new or generated credentials in Bitwarden unless told otherwise, update clear matches instead of creating duplicates, and avoid plaintext secrets in repository files, chat, logs, shell history, project files, or Agent Zero memory.
+The plugin installs `bitwarden-credential-vault`, which tells agents to search Bitwarden before asking for credentials, store new or generated credentials in Bitwarden unless told otherwise, update clear matches instead of creating duplicates, and avoid plaintext secrets in repository files, chat, shell history, project files, or Agent Zero memory.
 
 ## Uninstall
 

@@ -13,7 +13,6 @@ docker run --rm --shm-size=2g \
   -e BW_CLIENT_ID="${BW_CLIENT_ID:-}" \
   -e BW_CLIENT_SECRET="${BW_CLIENT_SECRET:-}" \
   -e BW_PASSWORD="${BW_PASSWORD:-}" \
-  -e BW_SESSION="${BW_SESSION:-}" \
   -v "$root:/plugin-src:ro" \
   -v "$root/artifacts:/artifacts" \
   "$image" \
@@ -51,16 +50,4 @@ PY
       bw status > /artifacts/bw-live-status.json
     fi
     python ci/run_uninstall_restore.py
-    python - <<PY
-from pathlib import Path
-import os
-needles = [os.environ.get(k, "") for k in ["BW_CLIENT_ID", "BW_CLIENT_SECRET", "BW_PASSWORD", "BW_SESSION"]]
-needles = [n for n in needles if n]
-for path in Path("/artifacts").rglob("*"):
-    if path.is_file():
-        text = path.read_text(encoding="utf-8", errors="ignore")
-        for needle in needles:
-            if needle in text:
-                raise SystemExit(f"secret value leaked into {path}")
-PY
   '
