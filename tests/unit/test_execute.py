@@ -189,6 +189,34 @@ def test_status_is_human_readable_by_default(monkeypatch, capsys) -> None:
     assert "Setup status: setup" in output
 
 
+def test_status_reports_custom_unmanaged_configuration(monkeypatch, capsys) -> None:
+    result = status_result()
+    result["mcp"] = {
+        "ok": True,
+        "state": "present",
+        "configured": False,
+        "custom": True,
+        "managed": False,
+    }
+    result["skill"] = {
+        "ok": True,
+        "state": "present",
+        "custom": True,
+        "managed": False,
+    }
+    monkeypatch.setattr(
+        plugin_imports,
+        "plugin_import",
+        lambda name: SimpleNamespace(collect_status=lambda: result),
+    )
+
+    assert execute.main(["status"]) == 0
+    output = capsys.readouterr().out
+
+    assert "Agent Zero MCP entry: present (custom, not plugin-managed, not configured as expected)" in output
+    assert "Credential vault skill: present (custom, not plugin-managed)" in output
+
+
 def test_status_json_preserves_status_payload(monkeypatch, capsys) -> None:
     monkeypatch.setattr(
         plugin_imports,

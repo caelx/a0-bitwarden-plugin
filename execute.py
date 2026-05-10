@@ -127,8 +127,8 @@ def _setup_lines(result: dict[str, Any]) -> list[str]:
         f"  mcp-server-bitwarden: {_executable_line(dependencies, 'mcp-server-bitwarden')}",
         f"  system packages: {_install_section(dependencies.get('system'))}",
         f"  npm packages: {_install_section(dependencies.get('npm'))}",
-        f"Agent Zero MCP entry: {_state(mcp)}",
-        f"Credential vault skill: {_state(skill)}",
+        f"Agent Zero MCP entry: {_config_state(mcp)}",
+        f"Credential vault skill: {_config_state(skill)}",
     ]
     lines.extend(_auth_lines(auth))
     lines.extend(_manifest_lines(manifest))
@@ -155,8 +155,8 @@ def _status_lines(result: dict[str, Any]) -> list[str]:
         f"Dependencies: {_state(dependencies)}",
         f"  bw: {_executable_line(dependencies, 'bw')}",
         f"  mcp-server-bitwarden: {_executable_line(dependencies, 'mcp-server-bitwarden')}",
-        f"Agent Zero MCP entry: {_state(mcp)}",
-        f"Credential vault skill: {_state(skill)}",
+        f"Agent Zero MCP entry: {_config_state(mcp)}",
+        f"Credential vault skill: {_config_state(skill)}",
     ]
     lines.extend(_auth_lines(auth))
     warnings = manifest.get("warnings")
@@ -223,6 +223,18 @@ def _state(result: dict[str, Any]) -> str:
     if state:
         return str(state)
     return _result_word(result) if "ok" in result else "unknown"
+
+
+def _config_state(result: dict[str, Any]) -> str:
+    state = _state(result)
+    notes: list[str] = []
+    if result.get("custom"):
+        notes.append("custom")
+    if result.get("managed") is False and state in {"present", "custom_existing"}:
+        notes.append("not plugin-managed")
+    if result.get("configured") is False and state == "present":
+        notes.append("not configured as expected")
+    return f"{state} ({', '.join(notes)})" if notes else state
 
 
 def _format_time(value: Any) -> str:
