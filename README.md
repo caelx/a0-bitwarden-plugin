@@ -1,5 +1,7 @@
 # Agent Zero Bitwarden Plugin
 
+<img src="webui/thumbnail.png" alt="Bitwarden plugin logo" width="160">
+
 Root-layout Agent Zero plugin named `bitwarden`. Its Execute action installs or verifies the Bitwarden CLI and Bitwarden MCP server, adds a `bitwarden` external MCP server entry, and installs the `bitwarden-credential-vault` skill.
 
 ## Install
