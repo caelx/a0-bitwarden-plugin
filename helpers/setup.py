@@ -37,7 +37,7 @@ def setup_plugin(
             "manifest": manifest,
         }
 
-    mcp = merge_settings_file(settings_path(cfg), manifest=manifest)
+    mcp = merge_settings_file(settings_path(cfg), manifest=manifest, create_missing=True)
     if mcp.get("ok") and mcp.get("managed"):
         manifest["mcp"] = {
             "managed": True,

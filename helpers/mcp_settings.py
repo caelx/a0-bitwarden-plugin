@@ -132,17 +132,39 @@ def inspect_settings(
     }
 
 
-def merge_settings_file(path: Path, manifest: dict[str, Any] | None = None) -> dict[str, Any]:
+def merge_settings_file(
+    path: Path,
+    manifest: dict[str, Any] | None = None,
+    *,
+    create_missing: bool = False,
+) -> dict[str, Any]:
     if not path.exists():
-        return {"ok": False, "changed": False, "state": "missing_settings", "path": str(path)}
-    try:
-        settings = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return {"ok": False, "changed": False, "state": "invalid_settings_json", "path": str(path)}
-    if not isinstance(settings, dict):
-        return {"ok": False, "changed": False, "state": "invalid_settings_root", "path": str(path)}
+        if not create_missing:
+            return {"ok": False, "changed": False, "state": "missing_settings", "path": str(path)}
+        settings: dict[str, Any] = {}
+        path.parent.mkdir(parents=True, exist_ok=True)
+    else:
+        try:
+            settings = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return {
+                "ok": False,
+                "changed": False,
+                "state": "invalid_settings_json",
+                "path": str(path),
+            }
+        if not isinstance(settings, dict):
+            return {
+                "ok": False,
+                "changed": False,
+                "state": "invalid_settings_root",
+                "path": str(path),
+            }
+    missing_created = not path.exists()
     updated, result = merge_bitwarden_mcp(settings, manifest=manifest)
     result["path"] = str(path)
+    if missing_created and result.get("state") == "created":
+        result["state"] = "created_settings"
     if result.get("ok") and result.get("changed"):
         path.write_text(json.dumps(updated, indent=4, sort_keys=True) + "\n", encoding="utf-8")
     return result

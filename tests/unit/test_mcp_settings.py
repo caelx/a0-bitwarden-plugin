@@ -5,6 +5,7 @@ import json
 from helpers.mcp_settings import (
     BITWARDEN_MCP_ENTRY,
     entry_hash,
+    merge_settings_file,
     merge_bitwarden_mcp,
     parse_mcp_servers,
     uninstall_mcp_settings_file,
@@ -78,3 +79,12 @@ def test_uninstall_preserves_modified_entry(tmp_path) -> None:
     config = json.loads(json.loads(path.read_text(encoding="utf-8"))["mcp_servers"])
     assert result["state"] == "preserved"
     assert config["mcpServers"]["bitwarden"] == custom
+
+
+def test_setup_merge_can_create_missing_settings_file(tmp_path) -> None:
+    path = tmp_path / "usr" / "settings.json"
+    result = merge_settings_file(path, manifest={}, create_missing=True)
+    settings = json.loads(path.read_text(encoding="utf-8"))
+    config = json.loads(settings["mcp_servers"])
+    assert result["state"] == "created_settings"
+    assert config["mcpServers"]["bitwarden"] == BITWARDEN_MCP_ENTRY
