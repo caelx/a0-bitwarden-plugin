@@ -9,7 +9,7 @@ from pathlib import Path
 
 def main() -> int:
     result = subprocess.run(
-        [sys.executable, "execute.py", "uninstall", "--noninteractive"],
+        [sys.executable, "execute.py", "uninstall", "--json"],
         check=False,
         text=True,
         capture_output=True,

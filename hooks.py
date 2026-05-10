@@ -8,7 +8,7 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 
-def install():
+def install(*args, **kwargs):
     root = Path(__file__).resolve().parent
     (root / ".bitwarden").mkdir(parents=True, exist_ok=True)
     return True

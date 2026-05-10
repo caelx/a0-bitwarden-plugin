@@ -1,35 +1,36 @@
 # Agent Zero Bitwarden Plugin
 
-Root-layout Agent Zero plugin named `bitwarden`. It installs or verifies the Bitwarden CLI and Bitwarden MCP server, adds a `bitwarden` external MCP server entry, and installs the `bitwarden-credential-vault` skill.
+Root-layout Agent Zero plugin named `bitwarden`. Its Execute action installs or verifies the Bitwarden CLI and Bitwarden MCP server, adds a `bitwarden` external MCP server entry, and installs the `bitwarden-credential-vault` skill.
 
 ## Install
 
-Install this repository through Agent Zero's Plugin Installer Git workflow using plugin name `bitwarden`, then enable `Bitwarden`.
+Install this repository through Agent Zero's Plugin Installer Git workflow using plugin name
+`bitwarden`, then enable `Bitwarden` and click the plugin's Execute button.
 
-From the installed plugin directory:
+Execute runs setup/repair and then prints a human-readable status report. It is safe to click
+multiple times. Restart or refresh Agent Zero after setup if MCP tool discovery does not
+immediately show the Bitwarden server.
 
-```bash
-python execute.py setup --noninteractive
-```
-
-Restart or refresh Agent Zero after setup if MCP tool discovery does not immediately show the Bitwarden server.
-
-## Commands
+## Maintenance Commands
 
 ```bash
+python execute.py
 python execute.py status
 python execute.py setup --noninteractive
 python execute.py repair --noninteractive
-python execute.py uninstall --noninteractive
+python execute.py uninstall
 ```
 
-Use `--skip-system-deps` when the environment cannot run `apt-get`. In that mode, setup requires `npm` to already be available if `bw` or `mcp-server-bitwarden` is missing.
+Use `python execute.py repair --skip-system-deps --noninteractive` when the environment cannot
+run `apt-get`. In that mode, repair requires `npm` to already be available if `bw` or
+`mcp-server-bitwarden` is missing.
 
-Every command prints machine-readable JSON. Status reports whether supported environment variables are present, not their values.
+Commands print human-readable output by default. Add `--json` for CI or troubleshooting. Status
+reports whether supported environment variables are present, not their values.
 
-## What Setup Does
+## What Execute Does
 
-Setup is idempotent:
+Execute setup is idempotent:
 
 - prefers existing `bw` and `mcp-server-bitwarden` executables already on `PATH`
 - installs missing Bitwarden tools with `npm install -g @bitwarden/cli @bitwarden/mcp-server`
@@ -73,7 +74,10 @@ The plugin installs `bitwarden-credential-vault`, which tells agents to search B
 
 ## Uninstall
 
-Uninstall removes only plugin-managed Agent Zero MCP and skill files. It preserves custom Bitwarden MCP entries, user-edited skills, global npm packages, Bitwarden CLI account data, session state, vault contents, Agent Zero projects, and user-created secrets.
+Run `python execute.py uninstall` before deleting the plugin directory if you want plugin-managed
+Agent Zero MCP and skill files removed. Uninstall preserves custom Bitwarden MCP entries,
+user-edited skills, global npm packages, Bitwarden CLI account data, session state, vault
+contents, Agent Zero projects, and user-created secrets.
 
 ## Development
 

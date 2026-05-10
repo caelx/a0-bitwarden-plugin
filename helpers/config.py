@@ -9,7 +9,7 @@ from typing import Any
 
 PLUGIN_NAME = "bitwarden"
 PLUGIN_TITLE = "Bitwarden"
-PLUGIN_VERSION = "1.0.0"
+PLUGIN_VERSION = "1.0.1"
 MANIFEST_NAME = ".bitwarden-install-manifest.json"
 MCP_SERVER_NAME = "bitwarden"
 SKILL_NAME = "bitwarden-credential-vault"

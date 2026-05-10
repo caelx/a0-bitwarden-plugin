@@ -7,6 +7,6 @@
 ## Project Notes
 
 - This repo is a root-layout Agent Zero plugin; keep `plugin.yaml` at the repository root.
-- Heavy setup belongs in `execute.py setup`; keep `hooks.py` lightweight and reversible.
+- Native install is lightweight; the Execute button runs setup/repair and then reports status.
 - Bitwarden secrets must never be collected into manifests, artifacts, README examples, or tests.
 - Preserve custom Agent Zero MCP entries and user-edited skills unless the install manifest proves plugin ownership.

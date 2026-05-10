@@ -88,3 +88,18 @@ def test_setup_merge_can_create_missing_settings_file(tmp_path) -> None:
     config = json.loads(settings["mcp_servers"])
     assert result["state"] == "created_settings"
     assert config["mcpServers"]["bitwarden"] == BITWARDEN_MCP_ENTRY
+
+
+def test_setup_merge_is_idempotent(tmp_path) -> None:
+    path = tmp_path / "settings.json"
+    first = merge_settings_file(path, manifest={}, create_missing=True)
+    second = merge_settings_file(
+        path,
+        manifest={"mcp": {"managed": True, "entry_hash": first["entry_hash"]}},
+        create_missing=True,
+    )
+    settings = json.loads(path.read_text(encoding="utf-8"))
+    config = json.loads(settings["mcp_servers"])
+    assert second["state"] == "present"
+    assert second["changed"] is False
+    assert list(config["mcpServers"]) == ["bitwarden"]
