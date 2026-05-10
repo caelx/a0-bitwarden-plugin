@@ -7,7 +7,11 @@ from pathlib import Path
 
 
 def main() -> int:
-    status = json.loads(Path("/artifacts/plugin-status.json").read_text(encoding="utf-8"))
+    payload = json.loads(Path("/artifacts/plugin-status.json").read_text(encoding="utf-8"))
+    status = payload.get("status", payload)
+    setup = payload.get("setup_result", {})
+    assert payload.get("ok", status.get("ok")) is True
+    assert setup.get("ok", True) is True
     assert status["dependencies"]["ok"] is True
     assert shutil.which("bw")
     assert shutil.which("mcp-server-bitwarden")

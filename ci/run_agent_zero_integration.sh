@@ -40,8 +40,7 @@ PY
     test -n "$plugin_dir"
     cd "$plugin_dir"
     ln -sfn /artifacts artifacts
-    python execute.py setup --noninteractive
-    python execute.py status > /artifacts/plugin-status.json
+    python execute.py --json > /artifacts/plugin-status.json
     python ci/collect_versions.py
     python ci/run_setup_smoke.py
     python ci/run_mcp_config_smoke.py
