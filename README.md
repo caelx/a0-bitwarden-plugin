@@ -76,10 +76,13 @@ The plugin installs `bitwarden-credential-vault`, which tells agents to search B
 
 ## Uninstall
 
-Run `python execute.py uninstall` before deleting the plugin directory if you want plugin-managed
-Agent Zero MCP and skill files removed. Uninstall preserves custom Bitwarden MCP entries,
-user-edited skills, global npm packages, Bitwarden CLI account data, session state, vault
-contents, Agent Zero projects, and user-created secrets.
+Disabling the plugin in Agent Zero removes plugin-managed Agent Zero MCP and skill files. Deleting
+or uninstalling the plugin through Agent Zero runs the same cleanup first.
+
+You can also run `python execute.py uninstall` manually before deleting the plugin directory.
+Uninstall preserves custom Bitwarden MCP entries, user-edited skills, global npm packages,
+Bitwarden CLI account data, session state, vault contents, Agent Zero projects, and user-created
+secrets.
 
 ## Development
 

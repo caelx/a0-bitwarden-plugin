@@ -14,6 +14,13 @@ def install(*args, **kwargs):
     return True
 
 
+def uninstall(*args, **kwargs):
+    from plugin_imports import plugin_import
+
+    result = plugin_import("helpers.uninstall").uninstall()
+    return bool(result.get("ok"))
+
+
 def get_plugin_config(default=None, **kwargs):
     from plugin_imports import plugin_import
 
